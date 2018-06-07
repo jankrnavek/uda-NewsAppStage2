@@ -10,6 +10,15 @@
         <item>@string/art</item>
     </string-array>
 
+    <string-array name="categories_val">
+        <item>@string/defaultOption_val</item>
+        <item>@string/business</item>
+        <item>@string/sport</item>
+        <item>@string/technology</item>
+        <item>@string/global</item>
+        <item>@string/art</item>
+    </string-array>
+
 </resources>
 
 

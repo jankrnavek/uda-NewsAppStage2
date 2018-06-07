@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String PAGE = "page-size";
     private static final String PAGES = "20";
     private static final String SECTION = "section";
+    private static final String TAGS = "show-tags";
+    private static final String AUTHOR = "contributor";
 
     private NewsAdapter mAdapter;
     private TextView EmptyTextView;
@@ -79,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<List<News>> onCreateLoader(int id, Bundle args) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String searchCategory = sharedPreferences.getString(getString(R.string.chosen_option), getString(R.string.everything));
+        String searchCategory = sharedPreferences.getString(getString(R.string.chosen_option), getString(R.string.defaultOption_val));
 
         String[] categorySearch = searchCategory.split(" ");
         String catInCapitals = categorySearch[0];
@@ -88,10 +90,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri uri = Uri.parse(GUARDIAN_URL);
         Uri.Builder uriBuilder = uri.buildUpon();
 
+        if (!category.equals("all")) {
+            uriBuilder.appendQueryParameter(SECTION, category);
+        }
+
         uriBuilder.appendQueryParameter(API_KEY, PASSWORD);
-        uriBuilder.appendQueryParameter(SECTION, category);
         uriBuilder.appendQueryParameter(ORDER, DATE);
         uriBuilder.appendQueryParameter(PAGE, PAGES);
+        uriBuilder.appendQueryParameter(TAGS, AUTHOR);
 
         return new NewsLoader(this, uriBuilder.toString());
     }
@@ -136,10 +142,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onResume() {
         super.onResume();
-        restartLoader();
-    }
-
-    public void restartLoader() {
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.restartLoader(1, null, this);
     }

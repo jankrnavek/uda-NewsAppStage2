@@ -21,8 +21,6 @@ import java.net.URL;
 public class NewsUtils {
     private static final String LOG_TAG = NewsUtils.class.getSimpleName();
 
-//    final static String THEGUARDIAN_URL = "http://content.guardianapis.com/search?q=debates&api-key=test";
-
     public NewsUtils() {
     }
 
@@ -57,12 +55,24 @@ public class NewsUtils {
                 String itemTitle = currentItem.getString("webTitle");
                 String itemUrl = currentItem.getString("webUrl");
 
-                String itemDate = "NA";
+                String itemDate = "N/A";
                 if (currentItem.has("webPublicationDate")) {
                     itemDate = currentItem.getString("webPublicationDate");
                 }
 
-                News itemNews = new News(itemTitle, itemUrl, itemCategory, itemDate);
+                JSONArray currentNewsAuthorArray = currentItem.getJSONArray("tags");
+
+                String itemAuthor = "author: N/A";
+                int tagsLenght = currentNewsAuthorArray.length();
+
+                if (tagsLenght == 1) {
+                    JSONObject currentNewsAuthor = currentNewsAuthorArray.getJSONObject(0);
+                    String authorName = currentNewsAuthor.getString("webTitle");
+                    itemAuthor = "author: " + authorName;
+                }
+
+
+                News itemNews = new News(itemTitle, itemUrl, itemCategory, itemDate, itemAuthor);
                 news.add(itemNews);
             }
 
